@@ -1,0 +1,80 @@
+// Load environment variables from .env file
+require('dotenv').config()
+
+// setup global const
+const sessionFolderPath = process.env.SESSIONS_PATH || './sessions'
+const panelFilesPath = process.env.PANEL_FILES_PATH || './panel_files'
+const enableLocalCallbackExample = (process.env.ENABLE_LOCAL_CALLBACK_EXAMPLE || '').toLowerCase() === 'true'
+const globalApiKey = process.env.API_KEY
+const baseWebhookURL = process.env.BASE_WEBHOOK_URL
+const maxAttachmentSize = parseInt(process.env.MAX_ATTACHMENT_SIZE) || 10000000
+// Biblioteca de arquivos do painel; separado do MAX_ATTACHMENT_SIZE, que também rege o download de mídia recebida para o webhook
+const panelMaxFileSize = parseInt(process.env.PANEL_MAX_FILE_SIZE) || 50000000
+// Fuso dos horários nos relatórios exportados (o container roda em UTC)
+const reportTimeZone = process.env.REPORT_TIMEZONE || 'America/Sao_Paulo'
+const setMessagesAsSeen = (process.env.SET_MESSAGES_AS_SEEN || '').toLowerCase() === 'true'
+const disabledCallbacks = process.env.DISABLED_CALLBACKS ? process.env.DISABLED_CALLBACKS.split('|') : []
+const enableSwaggerEndpoint = (process.env.ENABLE_SWAGGER_ENDPOINT || 'true').toLowerCase() === 'true'
+const webVersion = process.env.WEB_VERSION
+const webVersionCacheType = process.env.WEB_VERSION_CACHE_TYPE || 'none'
+const rateLimitMax = process.env.RATE_LIMIT_MAX || 1000
+const rateLimitWindowMs = process.env.RATE_LIMIT_WINDOW_MS || 1000
+const recoverSessions = (process.env.RECOVER_SESSIONS || '').toLowerCase() === 'true'
+
+// PostgreSQL Configuration
+const postgresConfig = {
+  host: process.env.POSTGRES_HOST,
+  port: process.env.POSTGRES_PORT,
+  database: process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD
+}
+
+// JWT Configuration
+const jwtSecret = process.env.JWT_SECRET
+const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '24h'
+const jwtRefreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN || '7d'
+
+// Auth Configuration
+const enableAuth = (process.env.ENABLE_AUTH || 'true').toLowerCase() === 'true'
+
+// Validações de segurança
+if (!jwtSecret) {
+  console.error('❌ JWT_SECRET não configurado ou usando valor padrão inseguro')
+  process.exit(1)
+}
+
+if (!postgresConfig.password) {
+  console.error('❌ POSTGRES_PASSWORD não configurado ou usando valor padrão inseguro')
+  process.exit(1)
+}
+
+// Validar força do JWT secret
+if (!jwtSecret) {
+  console.error('❌ JWT_SECRET não configurado')
+  process.exit(1)
+}
+
+module.exports = {
+  sessionFolderPath,
+  panelFilesPath,
+  enableLocalCallbackExample,
+  globalApiKey,
+  baseWebhookURL,
+  maxAttachmentSize,
+  panelMaxFileSize,
+  reportTimeZone,
+  setMessagesAsSeen,
+  disabledCallbacks,
+  enableSwaggerEndpoint,
+  webVersion,
+  webVersionCacheType,
+  rateLimitMax,
+  rateLimitWindowMs,
+  recoverSessions,
+  postgresConfig,
+  jwtSecret,
+  jwtExpiresIn,
+  jwtRefreshExpiresIn,
+  enableAuth
+}

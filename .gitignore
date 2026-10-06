@@ -1,0 +1,31 @@
+# Ignore node_modules
+node_modules
+
+# Ignore dotenv files (segredos nunca vão para o repo; só os exemplos)
+.env
+.env.*
+!.env.example
+
+# Ignore sessions
+sessions
+sessions_test
+.wwebjs_cache
+
+# Ignore logs
+logs
+
+# Ignore test coverage reports
+coverage
+
+# Ignore other unnecessary files
+.DS_Store
+.vscode
+
+# Biblioteca de arquivos do painel
+panel_files
+
+.tasks
+/tasks
+/tests
+# Estado local do editor Cursor (não versionar)
+.cursor/hooks/state/
