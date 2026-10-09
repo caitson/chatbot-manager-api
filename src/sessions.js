@@ -11,10 +11,10 @@ const { resolveChatId } = require('./panel/messageMapper')
 
 // Function to validate if the session is ready
 const validateSession = async (sessionId) => {
+  console.log("Session ::validateSession ")
   try {
     const returnData = { success: false, state: null, message: '' }
 
-    // Session not Connected 😢
     if (!sessions.has(sessionId) || !sessions.get(sessionId)) {
       returnData.message = 'session_not_found'
       return returnData
@@ -55,21 +55,19 @@ const validateSession = async (sessionId) => {
   }
 }
 
-// Function to handle client session restoration
 const restoreSessions = () => {
+  console.log("Session ::restoreSessions ")
   try {
     if (!fs.existsSync(sessionFolderPath)) {
-      fs.mkdirSync(sessionFolderPath) // Create the session directory if it doesn't exist
+      fs.mkdirSync(sessionFolderPath) 
     }
-    // Read the contents of the folder
     fs.readdir(sessionFolderPath, (_, files) => {
-      // Iterate through the files in the parent folder
       for (const file of files) {
-        // Use regular expression to extract the string from the folder name
+        console.log("xxxx file",file)
         const match = file.match(/^session-(.+)$/)
         if (match) {
           const sessionId = match[1]
-          console.log('existing session detected', sessionId)
+          console.log('Existing session detected', sessionId)
           setupSession(sessionId)
         }
       }
@@ -116,6 +114,7 @@ const closeAllSessions = async () => {
 
 // Setup Session
 const setupSession = (sessionId) => {
+  console.log("Session ::setupSession ")
   try {
     if (sessions.has(sessionId)) {
       return { success: false, message: `Session already exists for: ${sessionId}`, client: sessions.get(sessionId) }
@@ -179,9 +178,11 @@ const setupSession = (sessionId) => {
 
 const initializeEvents = (client, sessionId) => {
   // check if the session webhook is overridden
+  console.log("Session ::initializeEvents ")
   const sessionWebhook = process.env[sessionId.toUpperCase() + '_WEBHOOK_URL'] || baseWebhookURL
   if (recoverSessions) {
     waitForNestedObject(client, 'pupPage').then(() => {
+      console.log(`✅ Sessão ${sessionId} recuperada com sucesso`)
       const restartSession = async (sessionId) => {
         sessions.delete(sessionId)
         await client.destroy().catch(e => {})
@@ -273,7 +274,7 @@ const initializeEvents = (client, sessionId) => {
   checkIfEventisEnabled('message')
     .then(_ => {
       client.on('message', async (message) => {
-        console.log("\nMessage :: ",message._data.notifyName,'\n')
+        console.log("\nMessage :: ",message._data.notifyName || message._data,'\n')
         triggerWebhook(sessionWebhook, sessionId, 'message', { message })
         
         // Invalidar cache de mensagens quando nova mensagem chegar
@@ -343,10 +344,10 @@ const initializeEvents = (client, sessionId) => {
 
   client.on('qr', (qr) => {
     client.qr = qr
-    console.log(`🔄 Novo QR code gerado para sessão: ${sessionId}`)
-    console.log(`📊 Tamanho do QR code: ${qr.length} caracteres`)
-    console.log(`🔗 QR code: ${qr.substring(0, 50)}...`)
-    console.log(`📱 QR code disponível em: /session/qr/${sessionId} (texto) ou /session/qr/${sessionId}/image (imagem)`)
+    console.log(`Novo QR code gerado para sessão: ${sessionId}`)
+    // onsole.log(`Tamanho do QR code: ${qr.length} caracteres`)
+    // console.log(`QR code: ${qr.substring(0, 50)}...`)
+    // console.log(`QR code disponível em: /session/qr/${sessionId} (texto) ou /session/qr/${sessionId}/image (imagem)`)
     
     checkIfEventisEnabled('qr')
       .then(_ => {
@@ -374,6 +375,7 @@ const initializeEvents = (client, sessionId) => {
 
 // Function to check if folder is writeable
 const deleteSessionFolder = async (sessionId) => {
+  console.log("Session ::deleteSessionFolder ")
   try {
     const targetDirPath = `${sessionFolderPath}/session-${sessionId}/`
     const resolvedTargetDirPath = await fs.promises.realpath(targetDirPath)
@@ -391,6 +393,7 @@ const deleteSessionFolder = async (sessionId) => {
 
 // Function to delete client session
 const deleteSession = async (sessionId, validation) => {
+  console.log("Session ::deleteSession ")
   try {
     const client = sessions.get(sessionId)
     if (!client) {
@@ -431,6 +434,7 @@ const deleteSession = async (sessionId, validation) => {
 
 // Function to handle session flush
 const flushSessions = async (deleteOnlyInactive) => {
+  console.log("Session ::flushSessions ")
   try {
     // Read the contents of the sessions folder
     const files = await fs.promises.readdir(sessionFolderPath)

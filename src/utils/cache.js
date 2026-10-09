@@ -182,13 +182,13 @@ const cache = {
 
 // TTLs padrão para diferentes tipos de dados
 const CACHE_TTL = {
-  CONTACTS: 600,        // 10 minutos
-  CHATS: 300,           // 5 minutos
-  MESSAGES: 120,        // 2 minutos
-  PROFILE_PIC: 3600,    // 1 hora
-  STATUS: 300,          // 5 minutos
-  QR_CODE: 60,          // 1 minuto
-  SESSION_INFO: 30      // 30 segundos
+  CONTACTS: 600, // 10 minutos
+  CHATS: 300, // 5 minutos
+  MESSAGES: 120, // 2 minutos
+  PROFILE_PIC: 3600, // 1 hora
+  STATUS: 300, // 5 minutos
+  QR_CODE: 60, // 1 minuto
+  SESSION_INFO: 30 // 30 segundos
 }
 
 // Funções auxiliares para cache específico

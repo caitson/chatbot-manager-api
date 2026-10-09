@@ -200,9 +200,9 @@ const validateDatabaseConnection = async () => {
     
     // Testar conexão básica
     const result = await client.query('SELECT NOW() as current_time, version() as version')
-    console.log('✅ Conexão com banco de dados estabelecida com sucesso')
-    console.log('📊 Informações do banco:')
-    console.log(`📋 Versão PostgreSQL: ${result.rows[0].version.split(' ')[0]} ${result.rows[0].version.split(' ')[1]}`)
+    console.log('Conexão com banco de dados estabelecida com sucesso')
+    console.log('Informações do banco:')
+    console.log(`Versão PostgreSQL: ${result.rows[0].version.split(' ')[0]} ${result.rows[0].version.split(' ')[1]}`)
     
     // Testar permissões
     await client.query('SELECT 1')

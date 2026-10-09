@@ -1,42 +1,11 @@
 # WhatsApp REST API
 
+// node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+
 > Este código é uma melhoria baseada no projeto original disponível em [https://github.com/pedroherpeto/whatsapp-api](https://github.com/pedroherpeto/whatsapp-api).
 
 
-API REST wrapper para a biblioteca [whatsapp-web.js](https://github.com/pedroslopez/whatsapp-web.js), fornecendo uma interface fácil de usar para interagir com a plataforma WhatsApp Web.
-Foi projetada para ser usada como um container Docker, escalável, segura e fácil de integrar com outros projetos não-NodeJs.
-
-Este projeto está em desenvolvimento: dê uma estrela, crie issues, funcionalidades.
-
-**OBSERVAÇÃO**: Não posso garantir que você não será bloqueado ao usar este método, embora tenha funcionado para mim. O WhatsApp não permite bots ou clientes não oficiais em sua plataforma, então isso não deve ser considerado totalmente seguro.
-
-## Índice
-
-[1. Funcionalidades](#funcionalidades)
-
-[2. Painel Web](#painel-web)
-
-[3. Sistema de Autenticação](#sistema-de-autenticação)
-
-[4. Executar Localmente](#executar-localmente)
-
-[5. Sistema de Cache](#sistema-de-cache)
-
-[6. Testes](#testes)
-
-[7. Documentação](#documentação)
-
-[8. Webhooks](#webhooks)
-
-[9. Deploy em Produção](#deploy-em-produção)
-
-[10. Contribuindo](#contribuindo)
-
-[11. Licença](#licença)
-
-[12. Histórico de Estrelas](#histórico-de-estrelas)
-
-## Funcionalidades
 
 1. API e Callbacks
 
@@ -414,20 +383,6 @@ npm run test:session-ownership
 
 # Teste de admin master
 npm run test:admin-master
-```
-
-Para mais detalhes, consulte a [documentação de validação de banco](docs/DATABASE_VALIDATION.md).
-
-### 🧹 Código Limpo
-
-A aplicação segue princípios de código limpo e responsabilidade única:
-
-- ✅ **Separação de responsabilidades** em serviços dedicados
-- ✅ **AppInitializer**: Gerencia inicialização de todos os serviços
-- ✅ **AppCleanup**: Gerencia encerramento limpo da aplicação
-- ✅ **app.js simplificado**: Foco apenas na configuração do Express
-
-Para mais detalhes, consulte a [documentação de estrutura de código](docs/CODE_STRUCTURE.md).
 
 ## Documentação
 
@@ -779,15 +734,3 @@ services:
 - Desabilite a variável de ambiente `ENABLE_LOCAL_CALLBACK_EXAMPLE`
 - Defina a variável de ambiente `API_KEY` para proteger os endpoints REST
 - Execute periodicamente o endpoint `/api/terminateInactiveSessions` para evitar que sessões inúteis ocupem espaço e recursos (apenas no caso de você não ter controle das sessões)
-
-## Contribuindo
-
-Contribuições são bem-vindas! Por favor, leia o arquivo [CONTRIBUTING.md](./CONTRIBUTING.md) para detalhes sobre como contribuir para este projeto.
-
-## Aviso Legal
-
-Este projeto não é afiliado, associado, autorizado, endossado por, ou de qualquer forma oficialmente conectado com o WhatsApp ou qualquer uma de suas subsidiárias ou afiliadas. O site oficial do WhatsApp pode ser encontrado em https://whatsapp.com. "WhatsApp" bem como nomes relacionados, marcas, emblemas e imagens são marcas registradas de seus respectivos proprietários.
-
-## Licença
-
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE.md](./LICENSE.md) para detalhes.

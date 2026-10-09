@@ -19,7 +19,7 @@ function translateTags(tags) {
     'Group Chat': 'Grupo',
     'Contact': 'Contato',
     'Various': 'Diversos'
-  };
+  }
 
   return tags.map(tag => ({
     ...tag,
@@ -38,7 +38,7 @@ function translateDescription(description) {
     'Operations related to WhatsApp groups': 'Operações relacionadas a grupos do WhatsApp',
     'Operations related to contacts': 'Operações relacionadas a contatos',
     'Various endpoints and utilities': 'Endpoints diversos e utilitários'
-  };
+  }
 
   return translations[description] || description
 }
@@ -123,7 +123,6 @@ function translateSummary(summary) {
     'Unblock contact': 'Desbloquear Contato',
     'Get formatted number': 'Obter Número Formatado',
     'Get country code': 'Obter Código do País',
-    'Get profile picture URL': 'Obter URL da Foto de Perfil',
     'Check API status': 'Verificar Status da API',
     'Local callback example': 'Exemplo de Webhook Local',
     'Cache status': 'Status do Cache',
@@ -139,7 +138,7 @@ function translateSummary(summary) {
     'Deletar usuário': 'Deletar Usuário',
     'Listar tokens do usuário': 'Listar Tokens do Usuário',
     'Listar sessões do usuário': 'Listar Sessões do Usuário'
-  };
+  }
 
   return translations[summary] || summary
 }
@@ -201,7 +200,7 @@ function syncSwaggerPT() {
           // Traduzir tags
           if (endpoint.tags) {
             endpoint.tags = endpoint.tags.map(tag => {
-                          const tagTranslations = {
+          const tagTranslations = {
               'Auth': 'Autenticação',
               'Session': 'Sessão',
               'Client': 'Cliente',

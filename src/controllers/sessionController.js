@@ -18,7 +18,6 @@ const startSession = async (req, res) => {
   // #swagger.summary = 'Start new session'
   // #swagger.description = 'Starts a session for the given session ID.'
 
-  console.log('req.client :: ',req.client)
   try {
     const sessionId = req.params.sessionId
     
@@ -27,8 +26,8 @@ const startSession = async (req, res) => {
       try {
         const { query } = require('../database')
         await query(
-          'UPDATE whatsapp_sessions SET status = $1 WHERE session_id = $2 AND client_id = $3',
-          ['starting', sessionId, req.client.client_id]
+          'UPDATE whatsapp_sessions SET status = $1 WHERE session_id = $2',
+          ['starting', sessionId]
         )
       } catch (error) {
         console.error('Erro ao atualizar status da sessão:', error)
@@ -66,8 +65,8 @@ const startSession = async (req, res) => {
           try {
             const { query } = require('../database')
             await query(
-              'UPDATE whatsapp_sessions SET status = $1 WHERE session_id = $2 AND client_id = $3',
-              ['connected', sessionId, req.client.client_id]
+              'UPDATE whatsapp_sessions SET status = $1 WHERE session_id = $2',
+              ['connected', sessionId]
             )
           } catch (error) {
             console.error('Erro ao atualizar status da sessão:', error)
@@ -158,9 +157,9 @@ const sessionQrCode = async (req, res) => {
     }
     
     if (session.qr) {
-      console.log(`✅ QR code disponível para sessão: ${sessionId}`)
-      console.log(` Tamanho do QR code: ${session.qr.length} caracteres`)
-      console.log(`🔗 QR code: ${session.qr.substring(0, 50)}...`)
+      // console.log(`QR code disponível para sessão: ${sessionId}`)
+      // console.log(`Tamanho do QR code: ${session.qr.length} caracteres`)
+      // console.log(`QR code: ${session.qr.substring(0, 50)}...`)
       
       return res.json({ success: true, qr: session.qr })
     }
@@ -207,13 +206,13 @@ const sessionQrCodeImage = async (req, res) => {
     }
     
     if (session.qr) {
-      console.log(`✅ QR code disponível para sessão: ${sessionId}`)
-      console.log(` Tamanho do QR code: ${session.qr.length} caracteres`)
+      console.log(`QR code disponível para sessão: ${sessionId}`)
+      console.log(`Tamanho do QR code: ${session.qr.length} caracteres`)
       
       const qrImage = qr.image(session.qr)
       
       // Log adicional sobre a imagem gerada
-      console.log(`🖼️ Gerando imagem PNG do QR code para sessão: ${sessionId}`)
+      // console.log(`🖼️ Gerando imagem PNG do QR code para sessão: ${sessionId}`)
       
       /* #swagger.responses[200] = {
           description: "QR image.",
@@ -275,8 +274,8 @@ const terminateSession = async (req, res) => {
       try {
         const { query } = require('../database')
         await query(
-          'UPDATE whatsapp_sessions SET status = $1 WHERE session_id = $2 AND client_id = $3',
-          ['terminated', sessionId, req.client.client_id]
+          'UPDATE whatsapp_sessions SET status = $1 WHERE session_id = $2',
+          ['terminated', sessionId]
         )
       } catch (error) {
         console.error('Erro ao atualizar status da sessão:', error)

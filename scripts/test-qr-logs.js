@@ -38,9 +38,9 @@ async function testQRLogs() {
         headers: { 'x-api-key': API_KEY },
         responseType: 'arraybuffer'
       })
-      console.log('✅ QR code como imagem obtido')
-      console.log(`📊 Tamanho da imagem: ${qrImageResponse.data.length} bytes`)
-      console.log(`📋 Content-Type: ${qrImageResponse.headers['content-type']}`)
+      console.log('QR code como imagem obtido')
+      console.log(`Tamanho da imagem: ${qrImageResponse.data.length} bytes`)
+      console.log(`Content-Type: ${qrImageResponse.headers['content-type']}`)
     } catch (error) {
       console.log('⚠️ QR code como imagem não disponível:', error.response?.data || error.message)
     }

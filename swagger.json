@@ -5,7 +5,16 @@
     "description": "API Wrapper for WhatsAppWebJS - Rotas de Usuário (Bearer Token)",
     "version": "1.0.0"
   },
-  "host": "",
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    },
+    {
+      "url": "https://api.example.com",
+      "description": "Production server"
+    }
+  ],
   "tags": [
     {
       "name": "Health",
@@ -833,15 +842,15 @@
         "tags": [
           "Client"
         ],
-        "description": "",
+        "description": "Envia uma mensagem de texto ou mídia via WhatsApp",
         "parameters": [
-          {
-            "name": "sessionId",
+           {
             "in": "path",
+            "name": "sessionId",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" },
+            "description": "ID único da sessão do WhatsApp",
+            "example": "89bb42761512"
           }
         ],
         "responses": {},

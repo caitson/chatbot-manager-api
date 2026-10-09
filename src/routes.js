@@ -13,6 +13,7 @@ const chatController = require('./controllers/chatController')
 const groupChatController = require('./controllers/groupChatController')
 const messageController = require('./controllers/messageController')
 const contactController = require('./controllers/contactController')
+const sessionConfigController = require('./controllers/sessionConfigController')
 
 // Importar rotas de autenticação
 const authRoutes = require('./routes/authRoutes')
@@ -85,6 +86,29 @@ routes.post('/cache/clear', [middleware.apikey], healthController.clearCache)
 
 // Database status endpoint
 routes.get('/database/status', healthController.databaseStatus)
+// for service callback
+const internalRouter = express.Router()
+internalRouter.use(middleware.authAny) 
+routes.use('/internal', internalRouter)
+
+internalRouter.get(
+  '/sessions/:sessionId/dialogflow-config',
+  sessionConfigController.getDialogflowConfig
+)
+
+internalRouter.post(
+  '/sessions/:sessionId/dialogflow-config',
+  sessionConfigController.upsertDialogflowConfig
+)
+
+internalRouter.delete(
+  '/sessions/:sessionId/dialogflow-config',
+  sessionConfigController.deleteDialogflowConfig
+)
+
+// internalRouter.post('/sessions/:sessionId/invalidate-cache',
+//   sessionConfigController.invalidateDialogflowCache
+// )
 
 // API basic callback
 if (enableLocalCallbackExample) {
@@ -164,7 +188,8 @@ sessionRouter.get('/terminateAll',
  */
 
 const clientRouter = express.Router()
-clientRouter.use(middleware.userAuth)
+// clientRouter.use(middleware.userAuth)
+clientRouter.use(middleware.authAny)
 clientRouter.use(middleware.clientSwagger)
 routes.use('/client', clientRouter)
 

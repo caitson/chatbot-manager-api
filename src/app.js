@@ -7,14 +7,11 @@ const { maxAttachmentSize } = require('./config')
 const cors = require('cors')
 const helmet = require('helmet')
 
-// Importar serviços
 const AppInitializer = require('./services/appInitializer')
 const AppCleanup = require('./services/appCleanup')
 
-// Initialize Express app
 app.disable('x-powered-by')
 
-// Middleware de segurança com configuração personalizada para Swagger UI
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -73,10 +70,8 @@ app.get('/app/*', (req, res) => res.sendFile(path.join(webDistPath, 'index.html'
 // Rotas
 app.use('/', routes)
 
-// Configurar cleanup handlers
 AppCleanup.setupCleanupHandlers()
 
-// Inicializar aplicação
 const initializeApp = async () => {
   try {
     const initializer = new AppInitializer()
@@ -87,7 +82,6 @@ const initializeApp = async () => {
   }
 }
 
-// Iniciar aplicação
 initializeApp()
 
 module.exports = app

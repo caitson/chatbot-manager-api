@@ -88,7 +88,7 @@ async function testDatabaseValidation() {
     console.log()
     
     // Resumo dos testes
-    console.log('📊 Resumo dos testes:')
+    console.log('Resumo dos testes:')
     console.log('='.repeat(50))
     
     if (dbValidation.success) {

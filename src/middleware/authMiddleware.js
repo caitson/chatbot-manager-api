@@ -114,6 +114,9 @@ const requireAllScopes = (requiredScopes) => {
 
 // Middleware para verificar se o usuário é o proprietário da sessão
 const requireSessionOwnership = async (req, res, next) => {
+
+  if (req.user?.is_service) return next()
+
   const { sessionId } = req.params
   
   if (!req.user) {
@@ -141,6 +144,21 @@ const requireSessionOwnership = async (req, res, next) => {
 
 // Middleware para verificar se a sessão existe e pertence ao usuário (cria se não existir)
 const requireSessionOwnershipOrCreate = async (req, res, next) => {
+
+  if (req.user?.is_service) {
+    // service não cria, só acessa
+    const { sessionId } = req.params
+    const { query } = require('../database')
+    const result = await query(
+      'SELECT * FROM whatsapp_sessions WHERE session_id = $1', [sessionId]
+    )
+    if (!result.rows.length) {
+      return sendErrorResponse(res, 404, 'Sessão não encontrada')
+    }
+    req.session = result.rows[0]
+    return next()
+  }
+  
   const { sessionId } = req.params
   
   if (!req.user) {

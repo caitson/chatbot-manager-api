@@ -237,6 +237,22 @@ const chatSwagger = async (req, res, next) => {
   next()
 }
 
+
+const serviceAuth = (req, res, next) => {
+  const key = req.headers['x-service-key']
+  if (!key || key !== process.env.SERVICE_API_KEY) {
+    return sendErrorResponse(res, 401, 'Service key inválida')
+  }
+  req.user = { user_id: 'service', is_active: true, is_service: true }
+  req.token = { scope: 'read write admin' }
+  next()
+}
+
+const authAny = (req, res, next) => {
+  if (req.headers['x-service-key']) return serviceAuth(req, res, next)
+  return authenticateToken(req, res, next)
+}
+
 const groupChatSwagger = async (req, res, next) => {
   /*
     #swagger.tags = ['Group Chat']
@@ -277,5 +293,7 @@ module.exports = {
   requireAllScopes,
   requireSessionOwnership,
   requireSessionOwnershipOrCreate,
-  checkAuthEnabled
+  checkAuthEnabled,
+  authAny,
+  serviceAuth
 }
