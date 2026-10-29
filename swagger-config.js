@@ -1,69 +1,35 @@
-// Configuração do Swagger para múltiplos idiomas
-const fs = require('fs')
-const path = require('path')
+// chatbot-manager-api/swagger-config.js
 
-function getSwaggerConfig() {
-  const file = path.join(__dirname, 'swagger.json')
-  return JSON.parse(fs.readFileSync(file, 'utf8'))
+const components = require('./swagger/components')
+const authPaths = require('./swagger/paths/auth')
+const sessionPaths = require('./swagger/paths/session')
+const clientPaths = require('./swagger/paths/client')
+// const internalPaths = require('./swagger/paths/internal')
+// const healthPaths = require('./swagger/paths/health')
+
+const spec = {
+  openapi: '3.0.0',
+  info: {
+    title: 'WhatsApp API',
+    description: 'API Wrapper para whatsapp-web.js com autenticação e multi-sessão.',
+    version: '1.1.0'
+  },
+  servers: [{ url: 'http://localhost:3000', description: 'Servidor Local' }],
+  tags: [
+    { name: 'Auth', description: 'Autenticação e gestão de utilizadores' },
+    { name: 'Session', description: 'Gestão de múltiplas sessões' },
+    { name: 'Client', description: 'Operações do cliente WhatsApp' },
+    { name: 'Internal', description: 'Rotas internas para Webhooks e Serviços' },
+    { name: 'Health', description: 'Estado do sistema' }
+  ],
+  paths: {
+    ...authPaths,
+    ...sessionPaths,
+    ...clientPaths
+    // ...internalPaths,
+    // ...healthPaths
+  },
+  components
 }
 
-module.exports = { getSwaggerConfig }
-
-// Configurações disponíveis
-// const SWAGGER_CONFIGS = {
-//   'en': {
-//     file: 'swagger.json',
-//     title: 'WhatsApp API',
-//     description: 'API Wrapper for WhatsAppWebJS'
-//   },
-//   // 'pt': {
-//   //   file: 'swagger-pt.json',
-//   //   title: 'WhatsApp API',
-//   //   description: 'API Wrapper para WhatsAppWebJS - Interface REST para interagir com o WhatsApp Web'
-//   // },
-//   'admin': {
-//     file: 'swagger-admin.json',
-//     title: 'WhatsApp API - Administração',
-//     description: 'API para gerenciamento administrativo de usuários'
-//   }
-// }
-
-// Função para obter configuração do Swagger baseada no idioma
-// function getSwaggerConfig(language = 'en') {
-//   const config = SWAGGER_CONFIGS[language] || SWAGGER_CONFIGS['en']
-  
-//   try {
-//     const swaggerPath = path.join(__dirname, config.file)
-//     const swaggerContent = fs.readFileSync(swaggerPath, 'utf8')
-//     return JSON.parse(swaggerContent)
-//   } catch (error) {
-//     console.error(`Erro ao carregar Swagger ${language}:`, error.message)
-//     // Fallback para inglês
-//     const fallbackPath = path.join(__dirname, 'swagger.json')
-//     const fallbackContent = fs.readFileSync(fallbackPath, 'utf8')
-//     return JSON.parse(fallbackContent)
-//   }
-// }
-
-// Função para listar idiomas disponíveis
-// function getAvailableLanguages() {
-//   return Object.keys(SWAGGER_CONFIGS).map(lang => ({
-//     code: lang,
-//     // name: lang === 'en' ? 'English' : lang === 'pt' ? 'Português' : 'Administração',
-//     name: lang === 'en' ? 'English' : 'Administração',
-//     file: SWAGGER_CONFIGS[lang].file,
-//     description: SWAGGER_CONFIGS[lang].description
-//   }))
-// }
-
-// // Função para verificar se um idioma está disponível
-// function isLanguageAvailable(language) {
-//   return Object.keys(SWAGGER_CONFIGS).includes(language)
-// }
-
-// module.exports = {
-//   getSwaggerConfig,
-//   getAvailableLanguages,
-//   isLanguageAvailable,
-//   SWAGGER_CONFIGS
-// }
+module.exports = { getSwaggerConfig: () => spec }

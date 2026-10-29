@@ -31,23 +31,22 @@ class AuthService {
   }
 
   // Criar usuário
-  static async createUser(userName, description = '', userDocumentoIdentificacao = null) {
+  static async createUser(userName, description = '', userDocumentoIdentificacao = null, scope = 'read write') {
     const userId = uuidv4()
     const userSecret = uuidv4()
     const hashedSecret = await this.hashPassword(userSecret)
-    console.log("hashedSecret :: ",userSecret, "userName :: ",userName)
+    console.log(`[createUser] user="${userName}" id=${userId} scope="${scope}"`)
     const result = await query(
-      'INSERT INTO users (user_id, user_name, user_secret, user_documento_identificacao, description) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [userId, userName, hashedSecret, userDocumentoIdentificacao, description]
+      'INSERT INTO users (user_id, user_name, user_secret, user_documento_identificacao, description, scope) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [userId, userName, hashedSecret, userDocumentoIdentificacao, description, scope]
     )
 
-    // Retornar dados do usuário sem a senha, mas incluir a senha temporariamente para o primeiro acesso
     const userData = { ...result.rows[0] }
-    delete userData.user_secret // Remover senha criptografada
+    // delete userData.user_secret
     
     return {
       ...userData,
-      temporary_secret: userSecret // Retorna apenas uma vez para configuração inicial
+      temporary_secret: userSecret
     }
   }
 
@@ -71,12 +70,14 @@ class AuthService {
     return user
   }
 
-  // Gerar tokens de acesso
   static async generateAccessTokens(user) {
+     
+    const userScope = user.scope || 'read write'
+    
     const accessToken = this.generateToken({
       userId: user.user_id,
       userName: user.user_name,
-      scope: 'read write'
+      scope: userScope
     }, config.jwtExpiresIn)
 
     const refreshToken = this.generateToken({
@@ -84,10 +85,9 @@ class AuthService {
       type: 'refresh'
     }, config.jwtRefreshExpiresIn)
 
-    // Salvar tokens no banco
     await query(
       'INSERT INTO tokens (user_id, access_token, refresh_token, expires_at, scope) VALUES ($1, $2, $3, $4, $5)',
-      [user.user_id, accessToken, refreshToken, this.getExpirationTime(config.jwtExpiresIn), 'read write']
+      [user.user_id, accessToken, refreshToken, this.getExpirationTime(config.jwtExpiresIn), userScope]
     )
 
     return {
@@ -95,7 +95,7 @@ class AuthService {
       refresh_token: refreshToken,
       token_type: 'Bearer',
       expires_in: config.jwtExpiresIn,
-      scope: 'read write'
+      scope: userScope
     }
   }
 
@@ -187,7 +187,7 @@ class AuthService {
   // Listar todos os usuários
   static async getAllUsers() {
     const result = await query(
-      'SELECT id, user_id, user_name, user_documento_identificacao, description, is_active, created_at, updated_at FROM users ORDER BY created_at DESC'
+      'SELECT id, user_id, user_name, user_documento_identificacao, scope, description, is_active, created_at, updated_at FROM users ORDER BY created_at DESC'
     )
     return result.rows
   }

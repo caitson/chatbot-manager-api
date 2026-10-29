@@ -36,9 +36,10 @@ class AuthController {
     // }
     try {
 
-      const { user_name, description, user_documento_identificacao } = req.body
-
-      // Validações de segurança
+      const VALID_SCOPES = ['read write', 'read write admin']
+      let finalScope = 'read write'
+      const { user_name, description, user_documento_identificacao, scope } = req.body
+      
       if (!user_name || user_name.trim().length < 3) {
         return sendErrorResponse(res, 400, 'Nome do usuário deve ter pelo menos 3 caracteres')
       }
@@ -47,12 +48,18 @@ class AuthController {
         return sendErrorResponse(res, 400, 'Nome do usuário muito longo (máximo 100 caracteres)')
       }
 
-      // Sanitizar entrada
+      if (scope) {
+        if (!VALID_SCOPES.includes(scope)) {
+          return sendErrorResponse(res, 400, `Escopo inválido. Use: ${VALID_SCOPES.join(' ou ')}`)
+        }
+        finalScope = scope
+      }
+
       const sanitizedName = user_name.trim().replace(/[<>]/g, '')
       const sanitizedDescription = description ? description.trim().replace(/[<>]/g, '').substring(0, 500) : ''
       const sanitizedDocument = user_documento_identificacao ? user_documento_identificacao.trim().replace(/[<>]/g, '') : null
 
-      const user = await AuthService.createUser(sanitizedName, sanitizedDescription, sanitizedDocument)
+      const user = await AuthService.createUser(sanitizedName, sanitizedDescription, sanitizedDocument, finalScope)
 
       return sendSuccessResponse(res, 201, 'Usuário criado com sucesso', {
         id: user.id,
@@ -60,6 +67,7 @@ class AuthController {
         user_name: user.user_name,
         user_documento_identificacao: user.user_documento_identificacao,
         description: user.description,
+        scope: user.scope, 
         is_active: user.is_active,
         created_at: user.created_at,
         temporary_secret: user.temporary_secret // Retorna apenas uma vez

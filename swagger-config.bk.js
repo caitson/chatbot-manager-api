@@ -1,0 +1,69 @@
+// Configuração do Swagger para múltiplos idiomas
+const fs = require('fs')
+const path = require('path')
+
+function getSwaggerConfig() {
+  const file = path.join(__dirname, 'swagger.json')
+  return JSON.parse(fs.readFileSync(file, 'utf8'))
+}
+
+module.exports = { getSwaggerConfig }
+
+// Configurações disponíveis
+// const SWAGGER_CONFIGS = {
+//   'en': {
+//     file: 'swagger.json',
+//     title: 'WhatsApp API',
+//     description: 'API Wrapper for WhatsAppWebJS'
+//   },
+//   // 'pt': {
+//   //   file: 'swagger-pt.json',
+//   //   title: 'WhatsApp API',
+//   //   description: 'API Wrapper para WhatsAppWebJS - Interface REST para interagir com o WhatsApp Web'
+//   // },
+//   'admin': {
+//     file: 'swagger-admin.json',
+//     title: 'WhatsApp API - Administração',
+//     description: 'API para gerenciamento administrativo de usuários'
+//   }
+// }
+
+// Função para obter configuração do Swagger baseada no idioma
+// function getSwaggerConfig(language = 'en') {
+//   const config = SWAGGER_CONFIGS[language] || SWAGGER_CONFIGS['en']
+  
+//   try {
+//     const swaggerPath = path.join(__dirname, config.file)
+//     const swaggerContent = fs.readFileSync(swaggerPath, 'utf8')
+//     return JSON.parse(swaggerContent)
+//   } catch (error) {
+//     console.error(`Erro ao carregar Swagger ${language}:`, error.message)
+//     // Fallback para inglês
+//     const fallbackPath = path.join(__dirname, 'swagger.json')
+//     const fallbackContent = fs.readFileSync(fallbackPath, 'utf8')
+//     return JSON.parse(fallbackContent)
+//   }
+// }
+
+// Função para listar idiomas disponíveis
+// function getAvailableLanguages() {
+//   return Object.keys(SWAGGER_CONFIGS).map(lang => ({
+//     code: lang,
+//     // name: lang === 'en' ? 'English' : lang === 'pt' ? 'Português' : 'Administração',
+//     name: lang === 'en' ? 'English' : 'Administração',
+//     file: SWAGGER_CONFIGS[lang].file,
+//     description: SWAGGER_CONFIGS[lang].description
+//   }))
+// }
+
+// // Função para verificar se um idioma está disponível
+// function isLanguageAvailable(language) {
+//   return Object.keys(SWAGGER_CONFIGS).includes(language)
+// }
+
+// module.exports = {
+//   getSwaggerConfig,
+//   getAvailableLanguages,
+//   isLanguageAvailable,
+//   SWAGGER_CONFIGS
+// }

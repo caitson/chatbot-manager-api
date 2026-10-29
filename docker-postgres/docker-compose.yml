@@ -12,7 +12,7 @@ services:
     environment:
       - POSTGRES_DB=whatsapp_auth
       - POSTGRES_USER=whatsapp_user
-      - POSTGRES_PASSWORD=your_postgres_password_here  # Altere para uma senha segura
+      - POSTGRES_PASSWORD=admin01234  # Altere para uma senha segura
     restart: unless-stopped
     networks:
       - postgres_network
